@@ -14,20 +14,32 @@ local shaderFadeComplete = false -- Track if fade-out is complete
 
 local isInModSpace = false
 
-local function enableShader()
+local function enableFadeShader()
     shaderOn = true
     shaderData = postprocessing.load("PD_Fade")
     shaderData:enable(self.position)
     shaderData:setFloat("uStrength", uStrength)
 end
-
-local function disableShader()
+local function enableFogShader()
+    shaderOn = true
+    shaderData = postprocessing.load("PD_Fog")
+    shaderData:enable(self.position)
+    shaderData:setFloat("uStrength", uStrength)
+end
+local function disableFogShader()
     if shaderData then
         shaderData:disable()
         shaderData = nil
     end
-    shaderOn = false
+end
+local function disableFadeShader()
+    if shaderData then
+        shaderData:disable()
+        shaderData = nil
+    end
+    --shaderOn = false
     shaderFadeComplete = true -- Mark fade-out as complete
+    enableFogShader()
 end
 local cellNamespace = "Fields of Regret"
 local function startsWith(str, prefix) --Checks if a string starts with another string
@@ -40,10 +52,11 @@ local function onCellChange(newCell)
 
         -- Enable shader only if it hasn’t been faded out yet
         if not shaderOn and not shaderFadeComplete then
-            enableShader()
+            enableFadeShader()
         end
     else
         isInModSpace = false
+        disableFogShader()
     end
 end
 local lastCellId
@@ -66,8 +79,8 @@ local function onFrame(dt)
         uStrength = math.max(0.0, uStrength - dt * lerpSpeed) -- Lerp down to 0.0
         shaderData:setFloat("uStrength", uStrength)
 
-        if uStrength <= 0.0 then
-            disableShader() -- Disable shader once uStrength reaches 0.0
+        if uStrength <= 0.1 then
+            disableFadeShader() -- Disable shader once uStrength reaches 0.0
         end
     end
 end
