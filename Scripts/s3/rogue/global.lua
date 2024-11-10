@@ -367,6 +367,8 @@ return {
       numChunksVisited = state.numChunksVisited or 0
     end,
     onUpdate = function(_dt)
+      if not totalChunks then return end
+
       for index, player in ipairs(world.players) do
 
         local szudzikCoord = getNearestChunkPosition(player.position)
