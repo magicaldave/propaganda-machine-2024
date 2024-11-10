@@ -7,7 +7,8 @@ local musicStopped = false
 local musicFileName = "Sound\\PD\\Music\\5-minutes-of-silence.mp3"
 
 local shaderOn = false
-local shaderData
+local shaderDataFog
+local shaderDataFade
 local uStrength = 1.0            -- Start fully enabled
 local lerpSpeed = 0.2            -- Adjust this value for the fade-out speed
 local shaderFadeComplete = false -- Track if fade-out is complete
@@ -16,30 +17,31 @@ local isInModSpace = false
 
 local function enableFadeShader()
     shaderOn = true
-    shaderData = postprocessing.load("PD_Fade")
-    shaderData:enable(self.position)
-    shaderData:setFloat("uStrength", uStrength)
+    shaderDataFade = postprocessing.load("PD_Fade")
+    shaderDataFade:enable()
+    shaderDataFade:setFloat("uStrength", uStrength)
 end
 local function enableFogShader()
     shaderOn = true
-    shaderData = postprocessing.load("PD_Fog")
-    shaderData:enable(self.position)
-    shaderData:setFloat("uStrength", uStrength)
+    shaderDataFog = postprocessing.load("PD_Fog")
+    shaderDataFog:enable()
+    shaderDataFog:setFloat("uFogHeight",10000)
+    shaderDataFog:setFloat("uFogDensity",0.001)
 end
 local function disableFogShader()
-    if shaderData then
-        shaderData:disable()
-        shaderData = nil
+    if shaderDataFog then
+        shaderDataFog:disable()
+        shaderDataFog = nil
     end
 end
 local function disableFadeShader()
-    if shaderData then
-        shaderData:disable()
-        shaderData = nil
+    if shaderDataFade then
+        shaderDataFade:disable()
+        shaderDataFade = nil
     end
     --shaderOn = false
     shaderFadeComplete = true -- Mark fade-out as complete
-    enableFogShader()
+   -- enableFogShader()
 end
 local cellNamespace = "Fields of Regret"
 local function startsWith(str, prefix) --Checks if a string starts with another string
@@ -53,6 +55,7 @@ local function onCellChange(newCell)
         -- Enable shader only if it hasn’t been faded out yet
         if not shaderOn and not shaderFadeComplete then
             enableFadeShader()
+            enableFogShader()
         end
     else
         isInModSpace = false
@@ -75,11 +78,11 @@ local function onFrame(dt)
         end
     end
     -- Gradually decrease uStrength down to 0.0, then disable the shader
-    if shaderOn and shaderData then
+    if shaderOn and shaderDataFade then
         uStrength = math.max(0.0, uStrength - dt * lerpSpeed) -- Lerp down to 0.0
-        shaderData:setFloat("uStrength", uStrength)
+        shaderDataFade:setFloat("uStrength", uStrength)
 
-        if uStrength <= 0.1 then
+        if uStrength <= 0.0 then
             disableFadeShader() -- Disable shader once uStrength reaches 0.0
         end
     end
