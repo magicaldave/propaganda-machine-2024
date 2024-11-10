@@ -18,7 +18,7 @@ local isInModSpace = false
 local function enableFadeShader()
     shaderOn = true
     shaderDataFade = postprocessing.load("PD_Fade")
-    shaderDataFade:enable(1)
+    shaderDataFade:enable()
     shaderDataFade:setFloat("uStrength", uStrength)
 end
 local function enableFogShader()
