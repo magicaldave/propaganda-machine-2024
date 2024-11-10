@@ -75,7 +75,7 @@ local function onFrame(dt)
         end
     end
     -- Gradually decrease uStrength down to 0.0, then disable the shader
-    if shaderOn then
+    if shaderOn and shaderData then
         uStrength = math.max(0.0, uStrength - dt * lerpSpeed) -- Lerp down to 0.0
         shaderData:setFloat("uStrength", uStrength)
 
