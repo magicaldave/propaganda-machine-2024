@@ -85,6 +85,21 @@ return {
       },
     },
     {
+      cellId = "pd_claustro_alt",
+      edges = {
+        ["north"] = true,
+        ["south"] = true,
+        ["east"] = true,
+        ["west"] = true
+      },
+      barriers = {
+        ["north"] = true,
+        ["south"] = true,
+        ["east"] = true,
+        ["west"] = true
+      },
+    },
+    {
       cellId = "pd_zen",
       edges = {
         ["north"] = true,
