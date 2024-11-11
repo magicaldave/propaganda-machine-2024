@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 directories_to_compile=("Maps" "Maps/Edges" "Maps/Connectors")
-base_plugins=("TFOR.ESP" "Quilts & Quills.esp")
+base_plugins=("Quilts and Quills.omwaddon")
 
 final_plugin_name="The Propaganda Machine"
 
@@ -14,7 +14,7 @@ first_file=true
 current_dir=$(pwd)
 
 config_file="$HOME/.config/openmw/openmw.cfg"
-MTM_VERSION=v0.9.3
+MTM_VERSION=v0.9.6
 
 if [ ! -f "$config_file" ]; then
     echo "OpenMW config file not found. Creating it now..."
