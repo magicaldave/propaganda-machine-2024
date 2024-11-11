@@ -208,10 +208,6 @@ local function randomEdgeCell(direction)
   return procGenData.edges[direction][math.random(1, #procGenData.edges[direction])]
 end
 
-local function randomBarrierCell()
-  return procGenData.edgeBarriers[math.random(1, #procGenData.edgeBarriers)]
-end
-
 local function getTemplateCell(cellId)
   for _, templateObject in ipairs(procGenData.templateCells) do
     if cellId == templateObject.cellId then return templateObject end
@@ -230,15 +226,12 @@ local function generateEdgeRooms()
 
         if not positionHasChunk(adjacentChunkPosition) then
 
-          local spawnRoomOrBarrier = math.random(100) >= MAP_OR_BARRIER_PCT
+          local spawnRoomOrNone = math.random(100) >= MAP_OR_BARRIER_PCT
           local targetCell = getTemplateCell(chunkObject.cellId)
           local transitionRoomPosition = getTransitionRoomPosition(direction, adjacentChunkPosition)
 
-          if spawnRoomOrBarrier and targetCell.edges[direction] then
+          if spawnRoomOrNone and targetCell.edges[direction] then
             generateCell { cellId = randomEdgeCell(direction),
-              targetCell = world.players[1].cell.name, cursorPosition = transitionRoomPosition }
-          elseif not spawnRoomOrBarrier and targetCell.barriers[direction] then
-            generateCell { cellId = randomBarrierCell(),
               targetCell = world.players[1].cell.name, cursorPosition = transitionRoomPosition }
           end
 

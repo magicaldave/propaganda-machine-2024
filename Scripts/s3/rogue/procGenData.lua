@@ -115,24 +115,17 @@ return {
 
   edges = {
     east = {
-      "pd-edge-east",
+      "pd-edge",
     },
     west = {
-      "pd-edge-west",
+      "pd-edge",
     },
     north = {
-      "pd-edge-north",
+      "pd-edge",
     },
     south = {
-      "pd-edge-south",
+      "pd-edge",
     },
-  },
-
-  edgeBarriers = {
-    "pd-barrier-1",
-    "pd-barrier-2",
-    "pd-barrier-3",
-    "pd-barrier-4",
   },
 
   enemyLists = {
