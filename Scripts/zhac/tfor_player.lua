@@ -1,8 +1,11 @@
 local ambient = require('openmw.ambient')
 local postprocessing = require('openmw.postprocessing')
 local self = require('openmw.self')
+local time = require('openmw_aux.time')
 
-local musicFileName = "Sound\\PD\\Music\\5-minutes-of-silence.mp3"
+local noMusicFile = "Sound/PD/Music/5-minutes-of-silence.mp3"
+local musicLoopStopFn
+local MUSIC_LOOP_DURATION = 250
 
 local prevCellId
 
@@ -96,16 +99,38 @@ local function inModSpace(cellName)
     end
 end
 
+local function musicLoopFunc()
+    if not inModSpace(self.cell.name) then
+        musicLoopFunc()
+        musicLoopFunc = nil
+        return
+    end
+
+    ambient.streamMusic(noMusicFile)
+end
+
+local function beginMusicLoop()
+    if not ambient.isMusicPlaying() or musicLoopStopFn or not inModSpace(self.cell.name) then return end
+    assert(not musicLoopStopFn, "Do not ever create duplicate time.runRepeatedly handles!")
+
+    musicLoopStopFn = time.runRepeatedly(musicLoopFunc,
+                                         MUSIC_LOOP_DURATION * time.second,
+                                         {
+                                             initialDelay = 0,
+    })
+end
+
 local function onCellChange(cellName)
     local clavRealmCell = inModSpace(cellName)
 
     if clavRealmCell then
         enableShaders(clavRealmCell)
-        if ambient.isMusicPlaying() then ambient.streamMusic(musicFileName) end
         saveData.isInModSpace = true
     else
         if saveData.isInModSpace and ambient.isMusicPlaying then
             ambient.stopMusic()
+            musicLoopStopFn()
+            musicLoopStopFn = nil
             saveData.isInModSpace = false
         end
         if shaderOn then disableShaders() end
@@ -133,6 +158,7 @@ end
 
 local function onFrame(dt)
     fadeIn(dt)
+    beginMusicLoop()
 end
 
 return {
