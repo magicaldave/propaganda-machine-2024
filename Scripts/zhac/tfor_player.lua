@@ -29,7 +29,7 @@ local shaderConfig = {
     },
     ['The Vile Playground'] = {
         fade = {
-            uStrength = 1.0
+            uStrength = 1.4
         },
         fog = {
             uFogHeight = 1300,
