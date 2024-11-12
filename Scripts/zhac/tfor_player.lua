@@ -32,8 +32,8 @@ local shaderConfig = {
             uStrength = 1.0
         },
         fog = {
-            uFogHeight = 10000,
-            uFogDensity = .001
+            uFogHeight = 1300,
+            uFogDensity = .012
         },
     },
 }
